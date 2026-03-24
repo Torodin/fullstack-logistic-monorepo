@@ -4,6 +4,7 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { UsersModule } from '../users/users.module';
 import { AuthService } from './auth.service';
+import { RolesGuard } from './guard/roles.guard';
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -21,7 +22,7 @@ describe('AuthController', () => {
         UsersModule
       ],
       controllers: [AuthController],
-      providers: [AuthService],
+      providers: [AuthService, RolesGuard],
     }).compile();
 
     controller = module.get<AuthController>(AuthController);

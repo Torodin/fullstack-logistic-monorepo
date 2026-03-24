@@ -3,6 +3,7 @@ import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { User } from '@fullstack-logistic-wrk/prisma';
+import { CreateUserDto } from '../users/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -29,5 +30,9 @@ export class AuthService {
         return {
             access_token: this.jwtService.sign(payload)
         }
+    }
+
+    async register(createUserDto: CreateUserDto) {
+        return this.usersService.create(createUserDto);
     }
 }
