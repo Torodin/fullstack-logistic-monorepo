@@ -1,3 +1,23 @@
+CREATE OR REPLACE FUNCTION generate_shipment_id(prefix text, start_value smallint, padding_length smallint) RETURNS text AS $$
+DECLARE
+    today date := current_date;
+    new_value smallint;
+    formatted_id text;
+BEGIN
+    SELECT max(CAST(SUBSTRING(id, length(prefix) + 1) AS smallint)) INTO new_value FROM "Shipment";
+    
+    IF new_value IS NULL THEN
+        new_value := start_value;
+    ELSE
+        new_value := new_value + 1;
+    END IF;
+    
+    formatted_id := prefix || '-' || to_char(today, 'YYYYMMDD') || '-' || lpad(new_value::text, padding_length, '0');
+    
+    RETURN formatted_id;
+END;
+$$ LANGUAGE PLPGSQL VOLATILE;
+
 -- CreateEnum
 CREATE TYPE "Role" AS ENUM ('OPERATOR', 'SUPERVISOR');
 
