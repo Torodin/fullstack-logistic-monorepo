@@ -8,7 +8,9 @@
   "targets": {
     "build": {
       "executor": "@angular/build:application",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/apps/web",
         "browser": "apps/web/src/main.ts",
@@ -19,7 +21,9 @@
             "input": "apps/web/public"
           }
         ],
-        "styles": ["apps/web/src/styles.css"]
+        "styles": [
+          "apps/web/src/styles.css"
+        ]
       },
       "configurations": {
         "production": {
@@ -48,15 +52,22 @@
     "serve": {
       "continuous": true,
       "executor": "@angular/build:dev-server",
+      "dependsOn": [
+        "api:serve"
+      ],
       "configurations": {
         "production": {
           "buildTarget": "web:build:production"
         },
         "development": {
-          "buildTarget": "web:build:development"
+          "buildTarget": "web:build:development",
+          "proxyConfig": "apps/web/proxy.conf.json"
         }
       },
-      "defaultConfiguration": "development"
+      "defaultConfiguration": "development",
+      "options": {
+        "proxyConfig": "apps/web/proxy.conf.json"
+      }
     },
     "lint": {
       "executor": "@nx/eslint:lint"
