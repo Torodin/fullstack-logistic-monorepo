@@ -5,4 +5,4 @@ import { PrismaService } from './prisma.service';
   providers: [PrismaService],
   exports: [PrismaService], // Export it to use on nestjs apps
 })
-export class DatabaseModule {}
+export class PrismaModule {}
