@@ -6,6 +6,7 @@ import { STATE_TRANSITIONS } from './constants/state-transitions.const';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { SHIPMENT_UPDATED_EVENT, ShipmentUpdatedEventPayload } from './events/shipment-updated.event';
 import { SHIPMENT_DELIVERED_EVENT, ShipmentDeliveredEventPayload } from './events/shipment-delivered.event';
+import { FindAllShipmentsQueryDto } from './dto/find-all-shipments-query.dto';
 
 @Injectable()
 export class ShipmentsService {
@@ -18,8 +19,29 @@ export class ShipmentsService {
     return this.prismaService.shipment.create({ data: createShipmentDto });
   }
 
-  findAll() {
-    return this.prismaService.shipment.findMany();
+  async findAll(query: FindAllShipmentsQueryDto) {
+    const page = query.page ?? 1;
+    const limit = query.limit ?? 10;
+    const where = query.state ? { state: query.state } : undefined;
+
+    const [data, total] = await Promise.all([
+      this.prismaService.shipment.findMany({
+        where,
+        skip: (page - 1) * limit,
+        take: limit,
+      }),
+      this.prismaService.shipment.count({ where }),
+    ]);
+
+    return {
+      data,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
   }
 
   findOne(id: string) {

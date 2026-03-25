@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, Query } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -6,6 +6,7 @@ import {
 import { ShipmentsService } from './shipments.service';
 import { CreateShipmentDto } from './dto/create-shipment.dto';
 import { UpdateShipmentDto } from './dto/update-shipment.dto';
+import { FindAllShipmentsQueryDto } from './dto/find-all-shipments-query.dto';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { RolesGuard } from '../auth/guard/roles.guard';
 import { Role } from '@fullstack-logistic-wrk/prisma';
@@ -22,8 +23,9 @@ export class ShipmentsController {
   }
 
   @Get()
-  findAll() {
-    return this.shipmentsService.findAll();
+  @ApiOperation({ summary: 'List shipments with pagination and optional state filter' })
+  findAll(@Query() query: FindAllShipmentsQueryDto) {
+    return this.shipmentsService.findAll(query);
   }
 
   @Get(':id')

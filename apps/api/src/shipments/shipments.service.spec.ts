@@ -4,11 +4,14 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { ShipmentsService } from './shipments.service';
 import { PrismaService, State } from '@fullstack-logistic-wrk/prisma';
 import { SHIPMENT_UPDATED_EVENT } from './events/shipment-updated.event';
+import { FindAllShipmentsQueryDto } from './dto/find-all-shipments-query.dto';
 
 describe('ShipmentsService', () => {
   let service: ShipmentsService;
   let prismaService: {
     shipment: {
+      findMany: jest.Mock;
+      count: jest.Mock;
       findUnique: jest.Mock;
       update: jest.Mock;
     };
@@ -20,6 +23,8 @@ describe('ShipmentsService', () => {
   beforeEach(async () => {
     prismaService = {
       shipment: {
+        findMany: jest.fn(),
+        count: jest.fn(),
         findUnique: jest.fn(),
         update: jest.fn(),
       },
@@ -48,6 +53,69 @@ describe('ShipmentsService', () => {
 
   it('should be defined', () => {
     expect(service).toBeDefined();
+  });
+
+  describe('findAll', () => {
+    it('returns paginated shipments without a state filter', async () => {
+      const query: FindAllShipmentsQueryDto = { page: 2, limit: 3 };
+      const shipments = [
+        { id: 'shipment-1', state: State.CREATED },
+        { id: 'shipment-2', state: State.IN_WAREHOUSE },
+      ];
+
+      prismaService.shipment.findMany.mockResolvedValue(shipments);
+      prismaService.shipment.count.mockResolvedValue(7);
+
+      const result = await service.findAll(query);
+
+      expect(prismaService.shipment.findMany).toHaveBeenCalledWith({
+        where: undefined,
+        skip: 3,
+        take: 3,
+      });
+      expect(prismaService.shipment.count).toHaveBeenCalledWith({ where: undefined });
+      expect(result).toEqual({
+        data: shipments,
+        pagination: {
+          page: 2,
+          limit: 3,
+          total: 7,
+          totalPages: 3,
+        },
+      });
+    });
+
+    it('returns paginated shipments filtered by state', async () => {
+      const query: FindAllShipmentsQueryDto = {
+        page: 1,
+        limit: 5,
+        state: State.IN_TRANSIT,
+      };
+      const shipments = [{ id: 'shipment-3', state: State.IN_TRANSIT }];
+
+      prismaService.shipment.findMany.mockResolvedValue(shipments);
+      prismaService.shipment.count.mockResolvedValue(1);
+
+      const result = await service.findAll(query);
+
+      expect(prismaService.shipment.findMany).toHaveBeenCalledWith({
+        where: { state: State.IN_TRANSIT },
+        skip: 0,
+        take: 5,
+      });
+      expect(prismaService.shipment.count).toHaveBeenCalledWith({
+        where: { state: State.IN_TRANSIT },
+      });
+      expect(result).toEqual({
+        data: shipments,
+        pagination: {
+          page: 1,
+          limit: 5,
+          total: 1,
+          totalPages: 1,
+        },
+      });
+    });
   });
 
   describe('update', () => {
