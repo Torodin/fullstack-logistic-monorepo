@@ -70,10 +70,4 @@ export class AuthController {
     async register(@Body() createUserDto: CreateUserDto) {
         return this.authService.register(createUserDto);
     }
-
-    @UseGuards(JwtAuthGuard)
-    @Post('logout')
-    async logout(@Request() req) {
-        return req.logout();
-    }
 }
