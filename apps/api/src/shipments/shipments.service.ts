@@ -124,7 +124,7 @@ export class ShipmentsService {
 
       for (const vehicle of vehicles) {
         if (vehicle.remainingCapacity >= shipment.weight) {
-          vehicle.shipments.add({ id: shipment.id, weight: shipment.weight });
+          vehicle.shipments.push({ id: shipment.id, weight: shipment.weight });
 
           vehicle.totalWeight += shipment.weight;
           vehicle.remainingCapacity -= shipment.weight;
@@ -137,10 +137,10 @@ export class ShipmentsService {
       if (!assigned) {
         vehicles.push({
           vehicleNumber: vehicles.length + 1,
-          shipments: new Set([{ 
+          shipments: [{ 
             id: shipment.id, 
             weight: shipment.weight 
-          }]),
+          }],
           totalWeight: shipment.weight,
           remainingCapacity: assignVehiclesDto.vehicleCapacity - shipment.weight,
         });

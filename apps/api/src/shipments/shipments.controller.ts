@@ -12,14 +12,15 @@ import { RolesGuard } from '../auth/guard/roles.guard';
 import { Role } from '@fullstack-logistic-wrk/prisma';
 import { Roles } from '../auth/decorator/roles.decorator';
 import type { Request } from 'express';
+import { AssignVehiclesDto } from './dto/assign-vehicles.dto';
 
 @ApiBearerAuth('JWT-auth')
-@UseGuards(JwtAuthGuard, RolesGuard)
-@Roles(Role.SUPERVISOR, Role.OPERATOR)
 @Controller('shipments')
 export class ShipmentsController {
   constructor(private readonly shipmentsService: ShipmentsService) {}
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.SUPERVISOR, Role.OPERATOR)
   @Post()
   create(@Body() createShipmentDto: CreateShipmentDto) {
     return this.shipmentsService.create(createShipmentDto);
@@ -30,18 +31,24 @@ export class ShipmentsController {
     return this.shipmentsService.assignVehicles(assignVehiclesDto);
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.SUPERVISOR, Role.OPERATOR)
   @Get()
   @ApiOperation({ summary: 'List shipments with pagination and optional state filter' })
   findAll(@Query() query: FindAllShipmentsQueryDto) {
     return this.shipmentsService.findAll(query);
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.SUPERVISOR, Role.OPERATOR)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.shipmentsService.findOne(id);
   }
 
   @ApiOperation({ summary: 'Register a new user (SUPERVISOR only)' })
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.SUPERVISOR, Role.OPERATOR)
   @Patch(':id/status')
   update(
     @Param('id') id: string,
@@ -51,6 +58,8 @@ export class ShipmentsController {
     return this.shipmentsService.update(id, updateShipmentDto, req.user.id);
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.SUPERVISOR, Role.OPERATOR)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.shipmentsService.remove(id);
