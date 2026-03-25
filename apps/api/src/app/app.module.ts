@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config'
 import { AuthModule } from '../auth/auth.module';
 import { UsersModule } from '../users/users.module';
 import { ShipmentsModule } from '../shipments/shipments.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { ShipmentsModule } from '../shipments/shipments.module';
         'packages/prisma/.env',
       ]
     }),
+    EventEmitterModule.forRoot(),
     PrismaModule,
     AuthModule,
     UsersModule,

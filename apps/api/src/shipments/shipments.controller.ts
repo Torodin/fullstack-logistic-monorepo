@@ -1,10 +1,7 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
 import {
   ApiBearerAuth,
-  ApiBody,
   ApiOperation,
-  ApiResponse,
-  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { ShipmentsService } from './shipments.service';
 import { CreateShipmentDto } from './dto/create-shipment.dto';
@@ -13,6 +10,7 @@ import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { RolesGuard } from '../auth/guard/roles.guard';
 import { Role } from '@fullstack-logistic-wrk/prisma';
 import { Roles } from '../auth/decorator/roles.decorator';
+import type { Request } from 'express';
 
 @Controller('shipments')
 export class ShipmentsController {
@@ -37,9 +35,13 @@ export class ShipmentsController {
   @ApiBearerAuth('JWT-auth')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.SUPERVISOR, Role.OPERATOR)
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateShipmentDto: UpdateShipmentDto) {
-    return this.shipmentsService.update(id, updateShipmentDto);
+  @Patch(':id/status')
+  update(
+    @Param('id') id: string,
+    @Body() updateShipmentDto: UpdateShipmentDto,
+    @Req() req: Request,
+  ) {
+    return this.shipmentsService.update(id, updateShipmentDto, req.user.id);
   }
 
   @Delete(':id')

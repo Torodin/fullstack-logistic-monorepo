@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { ShipmentsController } from './shipments.controller';
 import { ShipmentsService } from './shipments.service';
 import { PrismaService } from '@fullstack-logistic-wrk/prisma';
@@ -27,6 +28,12 @@ describe('ShipmentsController', () => {
         {
           provide: PrismaService,
           useValue: prismaService,
+        },
+        {
+          provide: EventEmitter2,
+          useValue: {
+            emit: jest.fn(),
+          },
         },
       ],
     }).compile();
