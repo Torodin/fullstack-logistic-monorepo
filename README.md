@@ -2,7 +2,7 @@
 
 ## Objetivos
 - [ ] API Rest con NestJS y PostgreSQL
-    - [ ] Autenticación por roles con JWT
+    - [x] Autenticación por roles con JWT
     - [ ] Gestión de envíos
     - [ ] Tracking publico de envíos
     - [ ] Asignación de carga
@@ -17,9 +17,12 @@
     - [ ] Asignación de vehículos*
     - [ ] Dashboard supervisor*
 - [ ] Docker compose*
+    - [x] Dev
+    - [ ] Prod
 - [ ] GitHub actions (lint y test)*
 
 ## Decisiones
 
 - En un primer momento pensé en crear el monorepo con turborepo por costumbre, pero al encontrar algunas dificultades integrando nestjs con angular, cambié a nx como gestor.
 - Uso Prisma por familiaridad y por su gran experiencia de desarrollo junto a PostgreSQL.
+- Implemeta un RBAC por simplicidad, ya que el control de acceso necesario es muy basico
