@@ -5,7 +5,7 @@
     - [x] Autenticación por roles con JWT
     - [x] Gestión de envíos
     - [x] Tracking publico de envíos
-    - [ ] Asignación de carga
+    - [x] Asignación de carga
     - [ ] Swagger*
 - [ ] Front angular
     - [ ] Login
