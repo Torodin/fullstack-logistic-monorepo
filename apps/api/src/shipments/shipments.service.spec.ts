@@ -46,7 +46,7 @@ describe('ShipmentsService', () => {
       prismaService.shipment.findUnique.mockResolvedValue(existingShipment);
       prismaService.shipment.update.mockResolvedValue(updatedShipment);
 
-      const result = await service.update(id, { state: State.IN_WAREHOUSE });
+      const result = await service.update(id, { state: State.IN_WAREHOUSE, location: 'Warehouse A', notes: 'Shipment arrived at warehouse' });
 
       expect(prismaService.shipment.findUnique).toHaveBeenCalledWith({ where: { id } });
       expect(prismaService.shipment.update).toHaveBeenCalledWith({
@@ -64,7 +64,7 @@ describe('ShipmentsService', () => {
       prismaService.shipment.findUnique.mockResolvedValue(existingShipment);
       prismaService.shipment.update.mockResolvedValue(updatedShipment);
 
-      const result = await service.update(id, { state: State.CANCELED });
+      const result = await service.update(id, { state: State.CANCELED, location: 'On the way', notes: 'Shipment canceled by customer' });
 
       expect(prismaService.shipment.findUnique).toHaveBeenCalledWith({ where: { id } });
       expect(prismaService.shipment.update).toHaveBeenCalledWith({
@@ -80,7 +80,7 @@ describe('ShipmentsService', () => {
 
       prismaService.shipment.findUnique.mockResolvedValue(existingShipment);
 
-      const result = await service.update(id, { state: State.IN_TRANSIT });
+      const result = await service.update(id, { state: State.IN_TRANSIT, location: 'On the way' });
 
       expect(prismaService.shipment.findUnique).toHaveBeenCalledWith({ where: { id } });
       expect(prismaService.shipment.update).not.toHaveBeenCalled();
@@ -93,7 +93,7 @@ describe('ShipmentsService', () => {
 
       prismaService.shipment.findUnique.mockResolvedValue(existingShipment);
 
-      await expect(service.update(id, { state: State.CREATED })).rejects.toThrow(
+      await expect(service.update(id, { state: State.CREATED, location: 'In delivery'})).rejects.toThrow(
         new BadRequestException(
           `Invalid state transition from ${State.IN_DELIVERY} to ${State.CREATED}`,
         ),
@@ -108,7 +108,7 @@ describe('ShipmentsService', () => {
       prismaService.shipment.findUnique.mockResolvedValue(existingShipment);
 
       await expect(
-        service.update(id, { state: undefined as unknown as State }),
+        service.update(id, { state: undefined as unknown as State, location: 'Warehouse A' }),
       ).rejects.toThrow(BadRequestException);
       expect(prismaService.shipment.update).not.toHaveBeenCalled();
     });
@@ -120,7 +120,7 @@ describe('ShipmentsService', () => {
       prismaService.shipment.findUnique.mockResolvedValue(existingShipment);
 
       await expect(
-        service.update(id, { state: null as unknown as State }),
+        service.update(id, { state: null as unknown as State, location: 'Warehouse A' }),
       ).rejects.toThrow(BadRequestException);
       expect(prismaService.shipment.update).not.toHaveBeenCalled();
     });
@@ -130,7 +130,7 @@ describe('ShipmentsService', () => {
 
       prismaService.shipment.findUnique.mockResolvedValue(null);
 
-      await expect(service.update(id, { state: State.IN_TRANSIT })).rejects.toThrow(TypeError);
+      await expect(service.update(id, { state: State.IN_TRANSIT, location: 'Warehouse A'})).rejects.toThrow(TypeError);
       expect(prismaService.shipment.update).not.toHaveBeenCalled();
     });
   });

@@ -1,7 +1,7 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { CreateShipmentDto } from './create-shipment.dto';
 import { State } from '@fullstack-logistic-wrk/prisma';
-import { IsEnum } from 'class-validator';
+import { IsEnum, IsOptional, IsString } from 'class-validator';
 
 export class UpdateShipmentDto extends PartialType(CreateShipmentDto) {
     @ApiProperty({
@@ -11,4 +11,19 @@ export class UpdateShipmentDto extends PartialType(CreateShipmentDto) {
     })
     @IsEnum(State)
     state: State;
+
+    @ApiProperty({
+        description: 'Location of the shipment update',
+        example: 'Warehouse A',
+    })
+    @IsString()
+    location: string;
+
+    @ApiProperty({
+        description: 'Additional notes about the shipment update',
+        example: 'Shipment delayed due to weather conditions',
+    })
+    @IsOptional()
+    @IsString()
+    notes?: string;
 }
