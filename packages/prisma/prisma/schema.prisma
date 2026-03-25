@@ -42,7 +42,7 @@ model Shipment {
   origin       String
   destination  String
   addressee    String
-  phone        String
+  phone        String?
   weight       Int
   state        State     @default(CREATED)
   delivered_at DateTime?
