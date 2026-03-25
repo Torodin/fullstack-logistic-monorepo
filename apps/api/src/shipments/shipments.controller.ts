@@ -13,6 +13,9 @@ import { Role } from '@fullstack-logistic-wrk/prisma';
 import { Roles } from '../auth/decorator/roles.decorator';
 import type { Request } from 'express';
 
+@ApiBearerAuth('JWT-auth')
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles(Role.SUPERVISOR, Role.OPERATOR)
 @Controller('shipments')
 export class ShipmentsController {
   constructor(private readonly shipmentsService: ShipmentsService) {}
@@ -34,9 +37,6 @@ export class ShipmentsController {
   }
 
   @ApiOperation({ summary: 'Register a new user (SUPERVISOR only)' })
-  @ApiBearerAuth('JWT-auth')
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.SUPERVISOR, Role.OPERATOR)
   @Patch(':id/status')
   update(
     @Param('id') id: string,
