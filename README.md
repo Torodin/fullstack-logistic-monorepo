@@ -3,7 +3,7 @@
 ## Objetivos
 - [ ] API Rest con NestJS y PostgreSQL
     - [x] Autenticación por roles con JWT
-    - [ ] Gestión de envíos
+    - [x] Gestión de envíos
     - [ ] Tracking publico de envíos
     - [ ] Asignación de carga
     - [ ] Swagger*
