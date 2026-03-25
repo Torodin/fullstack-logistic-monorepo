@@ -4,7 +4,7 @@
 - [ ] API Rest con NestJS y PostgreSQL
     - [x] Autenticación por roles con JWT
     - [x] Gestión de envíos
-    - [ ] Tracking publico de envíos
+    - [x] Tracking publico de envíos
     - [ ] Asignación de carga
     - [ ] Swagger*
 - [ ] Front angular

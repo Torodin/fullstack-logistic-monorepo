@@ -8,5 +8,6 @@ import { ShipmentUpdatedListener } from './listeners/shipment-updated.listener';
   imports: [PrismaModule],
   controllers: [ShipmentsController],
   providers: [ShipmentsService, ShipmentUpdatedListener],
+  exports: [ShipmentsService]
 })
 export class ShipmentsModule {}

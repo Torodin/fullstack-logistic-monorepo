@@ -7,6 +7,8 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { SHIPMENT_UPDATED_EVENT, ShipmentUpdatedEventPayload } from './events/shipment-updated.event';
 import { SHIPMENT_DELIVERED_EVENT, ShipmentDeliveredEventPayload } from './events/shipment-delivered.event';
 import { FindAllShipmentsQueryDto } from './dto/find-all-shipments-query.dto';
+import { AssignVehiclesDto } from './dto/assign-vehicles.dto';
+import { VehicleShipmentAssignationDto } from './dto/vehicle-shipment-assignation.dto';
 
 @Injectable()
 export class ShipmentsService {
@@ -89,5 +91,66 @@ export class ShipmentsService {
     }
 
     return this.prismaService.shipment.delete({ where: { id } });
+  }
+
+  async assignVehicles(assignVehiclesDto: AssignVehiclesDto) {
+    const requestedShipmentsIds = new Set(assignVehiclesDto.shipmentIds);
+
+    const shipments = await this.prismaService.shipment.findMany({
+      select: { id: true, weight: true },
+      where: { id: { in: [...requestedShipmentsIds] } },
+      orderBy: { weight: 'desc' },
+    });
+
+    const validShipments = new Set<string>();
+    let totalWeight = 0;
+    for (const shipment of shipments) {
+      validShipments.add(shipment.id);
+      totalWeight += shipment.weight;
+
+      if (shipment.weight > assignVehiclesDto.vehicleCapacity) {
+        throw new BadRequestException(`Shipment ${shipment.id} exceeds vehicle capacity and cannot be assigned`);
+      }
+    }
+
+    if (validShipments.size !== requestedShipmentsIds.size) {
+      const invalidIds = [...requestedShipmentsIds].filter(id => !validShipments.has(id));
+      throw new BadRequestException(`The following shipment IDs are invalid: ${invalidIds.join(', ')}`);
+    }
+
+    const vehicles: VehicleShipmentAssignationDto['vehicles'] = [];
+    for (const shipment of shipments) {
+      let assigned = false;
+
+      for (const vehicle of vehicles) {
+        if (vehicle.remainingCapacity >= shipment.weight) {
+          vehicle.shipments.add({ id: shipment.id, weight: shipment.weight });
+
+          vehicle.totalWeight += shipment.weight;
+          vehicle.remainingCapacity -= shipment.weight;
+
+          assigned = true;
+          break;
+        }
+      }
+
+      if (!assigned) {
+        vehicles.push({
+          vehicleNumber: vehicles.length + 1,
+          shipments: new Set([{ 
+            id: shipment.id, 
+            weight: shipment.weight 
+          }]),
+          totalWeight: shipment.weight,
+          remainingCapacity: assignVehiclesDto.vehicleCapacity - shipment.weight,
+        });
+      }
+    }
+
+    return {
+      vehicles,
+      totalVechiclesUsed: vehicles.length,
+      totalWeight,
+    }
   }
 }

@@ -25,6 +25,11 @@ export class ShipmentsController {
     return this.shipmentsService.create(createShipmentDto);
   }
 
+  @Post('assign-vehicles')
+  assignVehicles(@Body() assignVehiclesDto: AssignVehiclesDto) {
+    return this.shipmentsService.assignVehicles(assignVehiclesDto);
+  }
+
   @Get()
   @ApiOperation({ summary: 'List shipments with pagination and optional state filter' })
   findAll(@Query() query: FindAllShipmentsQueryDto) {
