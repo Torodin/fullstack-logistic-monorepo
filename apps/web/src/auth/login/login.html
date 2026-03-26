@@ -1,0 +1,40 @@
+<div class="flex justify-content-center">
+  <p-card header="Sign in" class="w-full">
+    <form class="flex flex-column gap-3" (ngSubmit)="onSubmit()" autocomplete="on">
+      <p-floatlabel variant="on">
+        <label for="email">Email</label>
+        <input
+          pInputText
+          id="email"
+          name="email"
+          type="email"
+          [(ngModel)]="email"
+          required
+        />
+      </p-floatlabel>
+
+      <p-floatlabel variant="on">
+        <label for="password">Password</label>
+        <input
+          pInputText
+          id="password"
+          name="password"
+          type="password"
+          [(ngModel)]="password"
+          required
+        />
+      </p-floatlabel>
+
+      <button
+        pButton
+        type="submit"
+        [disabled]="isSubmitting"
+        [loading]="isSubmitting"
+      >Login</button>
+
+      @if (errorMessage) {
+        <small class="text-red-500">{{ errorMessage }}</small>
+      }
+    </form>
+  </p-card>
+</div>
