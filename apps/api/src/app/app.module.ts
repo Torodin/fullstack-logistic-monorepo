@@ -7,6 +7,7 @@ import { AuthModule } from '../auth/auth.module';
 import { UsersModule } from '../users/users.module';
 import { ShipmentsModule } from '../shipments/shipments.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { TrackingModule } from '../tracking/tracking.module';
 
 @Module({
   imports: [
@@ -22,7 +23,8 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     PrismaModule,
     AuthModule,
     UsersModule,
-    ShipmentsModule
+    ShipmentsModule,
+    TrackingModule
   ],
   controllers: [AppController],
   providers: [AppService],

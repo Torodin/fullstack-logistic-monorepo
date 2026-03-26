@@ -5,7 +5,7 @@ import { MenubarModule } from "primeng/menubar";
 @Component({
     selector: "app-menu-bar",
     template: `
-        <div class="card">
+        <div class="card m-1">
             <p-menubar [model]="items"/>
         </div>
     `,
