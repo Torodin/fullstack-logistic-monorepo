@@ -2,6 +2,7 @@ import { Component, computed, inject } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { MenubarModule } from 'primeng/menubar';
 import { AuthService } from '../../auth/auth.service';
+import { Role } from '@fullstack-logistic-wrk/prisma';
 
 @Component({
     selector: 'app-menu-bar',
@@ -27,6 +28,15 @@ export class AppMenuBar {
 
         if (this.authService.isAuthenticated()) {
             const currentUser = this.authService.currentUser();
+
+            if (currentUser && [Role.SUPERVISOR, Role.OPERATOR].includes(currentUser.role)) {
+                baseItems.push({
+                    label: 'Shipments',
+                    icon: 'pi pi-truck',
+                    routerLink: '/shipments',
+                });
+            }
+
             baseItems.push({
                 label: currentUser?.email ?? 'Logout',
                 icon: 'pi pi-sign-out',
