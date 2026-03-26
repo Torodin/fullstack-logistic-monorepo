@@ -2,17 +2,28 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { State } from '@fullstack-logistic-wrk/prisma/generated';
+import { ButtonModule } from 'primeng/button';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { finalize, Observable } from 'rxjs';
 import { ShipmentListResponse, ShipmentsService } from '../shipments.service';
 import { SelectModule } from 'primeng/select';
+import { CreateShipmentModal } from '../create-shipment-modal/create-shipment-modal';
 
 @Component({
   selector: 'app-shipment-list',
   templateUrl: './shipment-list.html',
-  imports: [CommonModule, FormsModule, TableModule, PaginatorModule, TagModule, SelectModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    TableModule,
+    PaginatorModule,
+    TagModule,
+    SelectModule,
+    ButtonModule,
+    CreateShipmentModal,
+  ],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -25,6 +36,7 @@ export class ShipmentList {
   errorMessage = signal('');
 
   selectedState = signal<State | ''>('');
+  showCreateModal = signal(false);
   page = signal(1);
   rows = signal(10);
 
@@ -59,6 +71,11 @@ export class ShipmentList {
 
     this.rows.set(rows);
     this.page.set(Math.floor(first / rows) + 1);
+    this.loadShipments();
+  }
+
+  onShipmentCreated(): void {
+    this.page.set(1);
     this.loadShipments();
   }
 

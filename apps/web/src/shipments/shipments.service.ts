@@ -20,6 +20,14 @@ export interface FindShipmentsParams {
   state?: State | null;
 }
 
+export interface CreateShipmentPayload {
+  origin: string;
+  destination: string;
+  addressee: string;
+  phone?: string;
+  weight: number;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -38,5 +46,9 @@ export class ShipmentsService {
     return this.http.get<ShipmentListResponse>('api/shipments', {
       params: queryParams,
     });
+  }
+
+  create(payload: CreateShipmentPayload) {
+    return this.http.post<Shipment>('api/shipments', payload);
   }
 }

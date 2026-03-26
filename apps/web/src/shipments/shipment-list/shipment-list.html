@@ -2,15 +2,24 @@
   <header class="shipment-list-header flex items-center justify-between m-2">
     <h2>Shipments</h2>
 
-    <label class="state-filter" for="shipment-state-filter">
-      State
-      <p-select
-        id="shipment-state-filter"
-        [options]="stateOptions"
-        [ngModel]="selectedState()"
-        (ngModelChange)="onStateChange($event)"
-      />
-    </label>
+    <div class="flex items-center gap-2">
+      <label class="state-filter" for="shipment-state-filter">
+        State
+        <p-select
+          id="shipment-state-filter"
+          [options]="stateOptions"
+          [ngModel]="selectedState()"
+          (ngModelChange)="onStateChange($event)"
+        />
+      </label>
+
+      <button
+        pButton
+        type="button"
+        icon="pi pi-plus"
+        (click)="showCreateModal.set(true)"
+      >New Shipment</button>
+    </div>
   </header>
 
   @if (errorMessage()) {
@@ -70,4 +79,10 @@
       (onPageChange)="onPageChange($event)"
     ></p-paginator>
   }
+
+  <app-create-shipment-modal
+    [visible]="showCreateModal()"
+    (visibleChange)="showCreateModal.set($event)"
+    (shipmentCreated)="onShipmentCreated()"
+  />
 </section>

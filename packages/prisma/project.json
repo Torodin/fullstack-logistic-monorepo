@@ -5,5 +5,13 @@
   "projectType": "library",
   "tags": [],
   "// targets": "to see all targets run: nx show project prisma --web",
-  "targets": {}
+  "targets": {
+    "seed": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx prisma db seed",
+        "cwd": "packages/prisma"
+      }
+    }
+  }
 }

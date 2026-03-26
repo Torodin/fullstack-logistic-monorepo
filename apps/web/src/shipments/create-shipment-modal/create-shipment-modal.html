@@ -1,0 +1,98 @@
+<p-dialog
+    header="Create shipment"
+    [visible]="visible()"
+    [modal]="true"
+    [closable]="!isSubmitting()"
+    [dismissableMask]="!isSubmitting()"
+    [draggable]="false"
+    [resizable]="false"
+    (visibleChange)="visibleChange.emit($event)"
+    (onHide)="close()"
+>
+    <form class="" (ngSubmit)="onSubmit()" autocomplete="off">
+        <div class="flex items-center justify-between gap-5 mb-2">
+            <label for="origin">Origin</label>
+            <input
+                pInputText
+                id="origin"
+                name="origin"
+                required
+                [ngModel]="form().origin"
+                (ngModelChange)="updateField('origin', $event)"
+            />
+        </div>
+
+        <div class="flex items-center justify-between gap-5 mb-2">
+            <label for="destination">Destination</label>
+            <input
+                pInputText
+                id="destination"
+                name="destination"
+                required
+                [ngModel]="form().destination"
+                (ngModelChange)="updateField('destination', $event)"
+            />
+        </div>
+
+        <div class="flex items-center justify-between gap-5 mb-2">
+            <label for="addressee">Addressee</label>
+            <input
+                pInputText
+                id="addressee"
+                name="addressee"
+                required
+                [ngModel]="form().addressee"
+                (ngModelChange)="updateField('addressee', $event)"
+            />
+        </div>
+
+        <div class="flex items-center justify-between gap-5 mb-2">
+            <label for="phone">Phone (optional)</label>
+            <input
+                pInputText
+                id="phone"
+                name="phone"
+                [ngModel]="form().phone"
+                (ngModelChange)="updateField('phone', $event)"
+            />
+        </div>
+
+        <div class="flex items-center justify-between gap-5 mb-2">
+            <label for="weight">Weight (kg)</label>
+            <p-inputnumber
+                inputId="weight"
+                name="weight"
+                [min]="0.01"
+                [maxFractionDigits]="2"
+                [useGrouping]="false"
+                [ngModel]="form().weight"
+                (ngModelChange)="updateField('weight', $event)"
+            />
+        </div>
+
+        @if (errorMessage()) {
+        <small class="text-red-500">{{ errorMessage() }}</small>
+        }
+
+        <div class="flex gap-6 mt-6 justify-center">
+            <button
+                pButton
+                type="button"
+                severity="secondary"
+                [outlined]="true"
+                [disabled]="isSubmitting()"
+                (click)="close()"
+            >
+                Cancel
+            </button>
+            <button
+                pButton
+                type="submit"
+                [loading]="isSubmitting()"
+                [disabled]="isSubmitting()"
+            >
+                Create
+            </button>
+        </div>
+    </form>
+</p-dialog>
