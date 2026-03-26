@@ -1,18 +1,15 @@
 <section class="shipment-list-container">
-  <header class="shipment-list-header">
+  <header class="shipment-list-header flex items-center justify-between m-2">
     <h2>Shipments</h2>
 
     <label class="state-filter" for="shipment-state-filter">
       State
-      <select
+      <p-select
         id="shipment-state-filter"
+        [options]="stateOptions"
         [ngModel]="selectedState()"
         (ngModelChange)="onStateChange($event)"
-      >
-        @for (option of stateOptions; track option.value) {
-          <option [ngValue]="option.value">{{ option.label }}</option>
-        }
-      </select>
+      />
     </label>
   </header>
 

@@ -7,12 +7,12 @@ import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { finalize, Observable } from 'rxjs';
 import { ShipmentListResponse, ShipmentsService } from '../shipments.service';
+import { SelectModule } from 'primeng/select';
 
 @Component({
   selector: 'app-shipment-list',
   templateUrl: './shipment-list.html',
-  styleUrl: './shipment-list.css',
-  imports: [CommonModule, FormsModule, TableModule, PaginatorModule, TagModule],
+  imports: [CommonModule, FormsModule, TableModule, PaginatorModule, TagModule, SelectModule],
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
