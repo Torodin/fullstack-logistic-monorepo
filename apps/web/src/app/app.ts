@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { NxWelcome } from './nx-welcome';
+import { AppMenuBar } from './app-menu-bar/app-menu-bar';
 
 @Component({
-  imports: [NxWelcome, RouterModule],
+  imports: [AppMenuBar, RouterModule],
   selector: 'app-root',
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
 export class App {
-  protected title = 'web';
+  protected title = 'Logistic App';
 }
