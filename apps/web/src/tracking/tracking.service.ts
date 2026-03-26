@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Event, State } from '@fullstack-logistic-wrk/prisma';
+import { Event, State } from '@fullstack-logistic-wrk/prisma/generated';
 import { Observable } from 'rxjs';
 
 @Injectable({

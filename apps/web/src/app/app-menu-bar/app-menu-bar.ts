@@ -2,7 +2,7 @@ import { Component, computed, inject } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { MenubarModule } from 'primeng/menubar';
 import { AuthService } from '../../auth/auth.service';
-import { Role } from '@fullstack-logistic-wrk/prisma';
+import { Role } from '@fullstack-logistic-wrk/prisma/generated';
 
 @Component({
     selector: 'app-menu-bar',

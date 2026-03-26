@@ -9,7 +9,7 @@ import { UpdateShipmentDto } from './dto/update-shipment.dto';
 import { FindAllShipmentsQueryDto } from './dto/find-all-shipments-query.dto';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { RolesGuard } from '../auth/guard/roles.guard';
-import { Role } from '@fullstack-logistic-wrk/prisma';
+import { Role } from '@fullstack-logistic-wrk/prisma/generated';
 import { Roles } from '../auth/decorator/roles.decorator';
 import type { Request } from 'express';
 import { AssignVehiclesDto } from './dto/assign-vehicles.dto';

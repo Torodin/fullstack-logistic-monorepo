@@ -11,7 +11,7 @@ import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guard/jwt-auth.guard';
 import { RolesGuard } from './guard/roles.guard';
 import { Roles } from './decorator/roles.decorator';
-import { Role } from '@fullstack-logistic-wrk/prisma';
+import { Role } from '@fullstack-logistic-wrk/prisma/generated';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 
 @Controller('auth')

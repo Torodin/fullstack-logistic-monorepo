@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivateFn, Router, RouterStateSnapshot } from '@angular/router';
-import { Role } from '@fullstack-logistic-wrk/prisma';
+import { Role } from '@fullstack-logistic-wrk/prisma/generated';
 import { AuthService } from '../auth.service';
 
 export const roleGuard: CanActivateFn = (

@@ -1,4 +1,4 @@
-import { Shipment } from "@fullstack-logistic-wrk/prisma";
+import { Shipment } from "@fullstack-logistic-wrk/prisma/generated";
 
 export class VehicleShipmentAssignationDto {
     vehicles: {

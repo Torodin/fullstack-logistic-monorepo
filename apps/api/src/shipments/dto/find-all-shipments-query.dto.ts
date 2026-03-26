@@ -1,5 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { State } from '@fullstack-logistic-wrk/prisma';
+import { State } from '@fullstack-logistic-wrk/prisma/generated';
 import { Type } from 'class-transformer';
 import { IsEnum, IsInt, IsOptional, Max, Min } from 'class-validator';
 

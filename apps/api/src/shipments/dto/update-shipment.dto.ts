@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { State } from '@fullstack-logistic-wrk/prisma';
+import { State } from '@fullstack-logistic-wrk/prisma/generated';
 import { IsEnum, IsOptional, IsString } from 'class-validator';
 
 export class UpdateShipmentDto {

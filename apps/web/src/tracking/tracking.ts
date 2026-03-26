@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TrackingService } from './tracking.service';
 import { Observable } from 'rxjs';
-import { Event, State } from '@fullstack-logistic-wrk/prisma';
+import { Event, State } from '@fullstack-logistic-wrk/prisma/generated';
 import { PanelModule } from 'primeng/panel';
 import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';

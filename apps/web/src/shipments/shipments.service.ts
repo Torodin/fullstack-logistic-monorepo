@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Shipment, State } from '@fullstack-logistic-wrk/prisma';
+import { Shipment, State } from '@fullstack-logistic-wrk/prisma/generated';
 
 export interface ShipmentPagination {
   page: number;

@@ -15,7 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@fullstack-logistic-wrk/prisma": ["packages/prisma/src/index.ts"]
+      "@fullstack-logistic-wrk/prisma": ["packages/prisma/src/index.ts"],
+      "@fullstack-logistic-wrk/prisma/generated": ["packages/prisma/src/generated.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

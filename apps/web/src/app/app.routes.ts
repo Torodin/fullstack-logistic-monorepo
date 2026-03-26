@@ -3,7 +3,7 @@ import { Tracking } from '../tracking/tracking';
 import { Login } from '../auth/login/login';
 import { ShipmentList } from '../shipments/shipment-list/shipment-list';
 import { roleGuard } from '../auth/guards/role.guard';
-import { Role } from '@fullstack-logistic-wrk/prisma';
+import { Role } from '@fullstack-logistic-wrk/prisma/generated';
 
 export const appRoutes: Route[] = [
     {

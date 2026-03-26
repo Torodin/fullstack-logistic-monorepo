@@ -2,7 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { BadRequestException } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { ShipmentsService } from './shipments.service';
-import { PrismaService, State } from '@fullstack-logistic-wrk/prisma';
+import { PrismaService } from '@fullstack-logistic-wrk/prisma';
+import { State } from '@fullstack-logistic-wrk/prisma/generated';
 import { SHIPMENT_UPDATED_EVENT } from './events/shipment-updated.event';
 import { FindAllShipmentsQueryDto } from './dto/find-all-shipments-query.dto';
 

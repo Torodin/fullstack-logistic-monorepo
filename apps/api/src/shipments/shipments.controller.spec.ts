@@ -2,7 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { ShipmentsController } from './shipments.controller';
 import { ShipmentsService } from './shipments.service';
-import { PrismaService, State } from '@fullstack-logistic-wrk/prisma';
+import { PrismaService } from '@fullstack-logistic-wrk/prisma';
+import { State } from '@fullstack-logistic-wrk/prisma/generated';
 import { FindAllShipmentsQueryDto } from './dto/find-all-shipments-query.dto';
 
 describe('ShipmentsController', () => {

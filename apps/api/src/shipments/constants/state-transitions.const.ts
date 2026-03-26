@@ -1,4 +1,4 @@
-import { State } from "@fullstack-logistic-wrk/prisma";
+import { State } from "@fullstack-logistic-wrk/prisma/generated";
 
 export const STATE_TRANSITIONS: Record<State, State[]> = {
     [State.CREATED]: [State.IN_WAREHOUSE, State.CANCELED],
