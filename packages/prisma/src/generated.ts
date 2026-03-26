@@ -1,3 +1,3 @@
 export * from '../generated/prisma/enums';
-export * from '../generated/prisma/models';
-export * from '../generated/prisma/client';
+export type * from '../generated/prisma/models';
+export type * from '../generated/prisma/client';

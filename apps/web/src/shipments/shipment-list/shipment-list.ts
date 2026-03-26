@@ -19,7 +19,7 @@ import { ShipmentListResponse, ShipmentsService } from '../shipments.service';
 export class ShipmentList {
   private readonly shipmentsService = inject(ShipmentsService);
 
-  shipments$!: Observable<ShipmentListResponse>;
+  shipmentsList$!: Observable<ShipmentListResponse>;
   totalRecords = signal(0);
   isLoading = signal(false);
   errorMessage = signal('');
@@ -88,14 +88,14 @@ export class ShipmentList {
     this.isLoading.set(true);
     this.errorMessage.set('');
 
-    this.shipments$ = this.shipmentsService
+    this.shipmentsList$ = this.shipmentsService
       .findAll({
         page: this.page(),
         limit: this.rows(),
         state: this.selectedState() || undefined,
       });
     
-    this.shipments$
+    this.shipmentsList$
       .pipe(finalize(() => this.isLoading.set(false)))
       .subscribe({
         next: ({ pagination }) => {
