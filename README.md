@@ -15,7 +15,7 @@
     - [ ] Exportar a csv\*
   - [x] Detalle envío
   - [x] Tracking publico
-  - [ ] Asignación de vehículos\*
+  - [x] Asignación de vehículos\*
   - [ ] Dashboard supervisor\*
 - [ ] Docker compose\*
   - [x] Dev
