@@ -51,14 +51,6 @@
                 [disabled]="isSubmitting"
                 [loading]="isSubmitting"
             >Create User</button>
-
-            @if (errorMessage) {
-                <small class="text-red-500">{{ errorMessage }}</small>
-            }
-
-            @if (successMessage) {
-                <small class="text-green-500">{{ successMessage }}</small>
-            }
         </form>
     </p-card>
 </div>

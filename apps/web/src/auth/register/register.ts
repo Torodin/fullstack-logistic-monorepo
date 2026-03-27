@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { FloatLabelModule } from 'primeng/floatlabel';
@@ -23,14 +24,13 @@ import { AuthService } from '../auth.service';
 })
 export class Register {
   private readonly authService = inject(AuthService);
+  private readonly messageService = inject(MessageService);
 
   email = '';
   password = '';
   name = '';
   role = Role.OPERATOR;
   isSubmitting = false;
-  errorMessage = '';
-  successMessage = '';
 
   readonly roles = [
     { label: 'Operator', value: Role.OPERATOR },
@@ -42,20 +42,16 @@ export class Register {
     const name = this.name.trim();
 
     if (!email || !this.password) {
-      this.errorMessage = 'Email and password are required.';
-      this.successMessage = '';
+      this.messageService.add({ severity: 'warn', summary: 'Validation', detail: 'Email and password are required.' });
       return;
     }
 
     if (this.password.length < 8) {
-      this.errorMessage = 'Password must be at least 8 characters.';
-      this.successMessage = '';
+      this.messageService.add({ severity: 'warn', summary: 'Validation', detail: 'Password must be at least 8 characters.' });
       return;
     }
 
     this.isSubmitting = true;
-    this.errorMessage = '';
-    this.successMessage = '';
 
     const payload = {
       email,
@@ -66,7 +62,7 @@ export class Register {
 
     this.authService.register(payload).subscribe({
       next: () => {
-        this.successMessage = `User "${email}" created successfully.`;
+        this.messageService.add({ severity: 'success', summary: 'User created', detail: `User "${email}" created successfully.` });
         this.email = '';
         this.password = '';
         this.name = '';
@@ -75,9 +71,10 @@ export class Register {
       },
       error: (err) => {
         const message = err?.error?.message;
-        this.errorMessage = Array.isArray(message)
+        const detail = Array.isArray(message)
           ? message.join(', ')
           : (message ?? 'Failed to create user. Please try again.');
+        this.messageService.add({ severity: 'error', summary: 'Error', detail });
         this.isSubmitting = false;
       },
     });

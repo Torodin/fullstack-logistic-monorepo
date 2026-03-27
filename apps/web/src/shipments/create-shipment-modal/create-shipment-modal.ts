@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, input, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { finalize } from 'rxjs';
+import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { InputNumberModule } from 'primeng/inputnumber';
@@ -32,18 +33,17 @@ interface CreateShipmentFormModel {
 })
 export class CreateShipmentModal {
 	private readonly shipmentsService = inject(ShipmentsService);
+	private readonly messageService = inject(MessageService);
 
 	visible = input(false);
 	visibleChange = output<boolean>();
 	shipmentCreated = output<void>();
 
 	isSubmitting = signal(false);
-	errorMessage = signal('');
 
 	form = signal<CreateShipmentFormModel>(this.createInitialForm());
 
 	close(): void {
-		this.errorMessage.set('');
 		this.form.set(this.createInitialForm());
 		this.visibleChange.emit(false);
 	}
@@ -52,7 +52,7 @@ export class CreateShipmentModal {
 		const form = this.form();
 
 		if (!form.origin.trim() || !form.destination.trim() || !form.addressee.trim() || form.weight === null) {
-			this.errorMessage.set('Please complete all required fields.');
+			this.messageService.add({ severity: 'warn', summary: 'Validation', detail: 'Please complete all required fields.' });
 			return;
 		}
 
@@ -65,7 +65,6 @@ export class CreateShipmentModal {
 		};
 
 		this.isSubmitting.set(true);
-		this.errorMessage.set('');
 
 		this.shipmentsService
 			.create(payload)
@@ -76,7 +75,7 @@ export class CreateShipmentModal {
 					this.close();
 				},
 				error: () => {
-					this.errorMessage.set('Failed to create shipment. Please try again.');
+					this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to create shipment. Please try again.' });
 				},
 			});
 	}

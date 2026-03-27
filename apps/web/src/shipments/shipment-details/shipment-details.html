@@ -20,8 +20,6 @@
 
   @if (isLoading()) {
     <p>Loading shipment details...</p>
-  } @else if (errorMessage()) {
-    <p class="error-message">{{ errorMessage() }}</p>
   } @else if (shipment(); as currentShipment) {
     <p-card class="mt-5 p-5">
       <ng-template #title>
@@ -127,10 +125,6 @@
           (input)="updateNotes($any($event.target).value)"
         ></textarea>
       </div>
-
-      @if (updateErrorMessage()) {
-        <p class="error-message">{{ updateErrorMessage() }}</p>
-      }
     </div>
 
     <ng-template #footer>

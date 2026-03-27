@@ -4,14 +4,15 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { STATE_TRANSITIONS } from '@fullstack-logistic-wrk/domain-constants';
 import { Event, State } from '@fullstack-logistic-wrk/prisma/generated';
+import { MessageService } from 'primeng/api';
 import { finalize } from 'rxjs';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
+import { FieldsetModule } from 'primeng/fieldset';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { TagModule } from 'primeng/tag';
-import { FieldsetModule } from 'primeng/fieldset';
 import { ShipmentDetailsResponse, ShipmentsService, UpdateShipmentPayload } from '../shipments.service';
 
 interface StateOption {
@@ -46,13 +47,12 @@ export class ShipmentDetails {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly shipmentsService = inject(ShipmentsService);
+  private readonly messageService = inject(MessageService);
 
   shipment = signal<ShipmentDetailsResponse | null>(null);
   isLoading = signal(true);
-  errorMessage = signal('');
   showStateModal = signal(false);
   isUpdatingState = signal(false);
-  updateErrorMessage = signal('');
   stateForm = signal<ShipmentStateFormModel>(this.createInitialStateForm());
 
   constructor() {
@@ -61,7 +61,7 @@ export class ShipmentDetails {
 
       if (!id) {
         this.shipment.set(null);
-        this.errorMessage.set('Invalid shipment id.');
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Invalid shipment id.' });
         this.isLoading.set(false);
         return;
       }
@@ -81,7 +81,6 @@ export class ShipmentDetails {
       return;
     }
 
-    this.updateErrorMessage.set('');
     this.stateForm.set({
       state: nextStates[0],
       location: '',
@@ -134,13 +133,13 @@ export class ShipmentDetails {
     }
 
     if (!form.state || !this.availableNextStates().includes(form.state)) {
-      this.updateErrorMessage.set('Select a valid next state.');
+      this.messageService.add({ severity: 'warn', summary: 'Validation', detail: 'Select a valid next state.' });
       return;
     }
 
     const location = form.location.trim();
     if (!location) {
-      this.updateErrorMessage.set('Location is required.');
+      this.messageService.add({ severity: 'warn', summary: 'Validation', detail: 'Location is required.' });
       return;
     }
 
@@ -151,7 +150,6 @@ export class ShipmentDetails {
     };
 
     this.isUpdatingState.set(true);
-    this.updateErrorMessage.set('');
 
     this.shipmentsService
       .update(currentShipment.id, payload)
@@ -162,7 +160,7 @@ export class ShipmentDetails {
           this.loadShipment(currentShipment.id);
         },
         error: () => {
-          this.updateErrorMessage.set('Failed to update shipment state. Please try again.');
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to update shipment state. Please try again.' });
         },
       });
   }
@@ -212,7 +210,6 @@ export class ShipmentDetails {
 
   private loadShipment(id: string): void {
     this.isLoading.set(true);
-    this.errorMessage.set('');
 
     this.shipmentsService
       .findOne(id)
@@ -221,7 +218,7 @@ export class ShipmentDetails {
         next: (shipment) => {
           if (!shipment) {
             this.shipment.set(null);
-            this.errorMessage.set('Shipment not found.');
+            this.messageService.add({ severity: 'warn', summary: 'Not found', detail: 'Shipment not found.' });
             return;
           }
 
@@ -232,7 +229,7 @@ export class ShipmentDetails {
         },
         error: () => {
           this.shipment.set(null);
-          this.errorMessage.set('Failed to load shipment details. Please try again.');
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to load shipment details. Please try again.' });
         },
       });
   }
@@ -251,7 +248,6 @@ export class ShipmentDetails {
 
   private resetStateModal(): void {
     this.showStateModal.set(false);
-    this.updateErrorMessage.set('');
     this.stateForm.set(this.createInitialStateForm());
   }
 }

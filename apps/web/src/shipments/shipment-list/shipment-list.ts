@@ -3,13 +3,14 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { State } from '@fullstack-logistic-wrk/prisma/generated';
+import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
+import { SelectModule } from 'primeng/select';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { finalize, Observable } from 'rxjs';
 import { ShipmentListResponse, ShipmentsService } from '../shipments.service';
-import { SelectModule } from 'primeng/select';
 import { CreateShipmentModal } from '../create-shipment-modal/create-shipment-modal';
 
 @Component({
@@ -31,11 +32,11 @@ import { CreateShipmentModal } from '../create-shipment-modal/create-shipment-mo
 export class ShipmentList {
   private readonly shipmentsService = inject(ShipmentsService);
   private readonly router = inject(Router);
+  private readonly messageService = inject(MessageService);
 
   shipmentsList$!: Observable<ShipmentListResponse>;
   totalRecords = signal(0);
   isLoading = signal(false);
-  errorMessage = signal('');
 
   selectedState = signal<State | ''>('');
   showCreateModal = signal(false);
@@ -109,7 +110,6 @@ export class ShipmentList {
 
   private loadShipments(): void {
     this.isLoading.set(true);
-    this.errorMessage.set('');
 
     this.shipmentsList$ = this.shipmentsService
       .findAll({
@@ -126,7 +126,7 @@ export class ShipmentList {
         },
         error: () => {
           this.totalRecords.set(0);
-          this.errorMessage.set('Failed to load shipments. Please try again.');
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to load shipments. Please try again.' });
         },
       });
   }

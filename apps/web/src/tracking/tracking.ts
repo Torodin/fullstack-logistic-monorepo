@@ -1,14 +1,15 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MessageService } from 'primeng/api';
 import { TrackingService } from './tracking.service';
 import { Observable } from 'rxjs';
 import { Event, State } from '@fullstack-logistic-wrk/prisma/generated';
-import { PanelModule } from 'primeng/panel';
-import { CardModule } from 'primeng/card';
-import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
+import { CardModule } from 'primeng/card';
 import { InputGroupModule } from 'primeng/inputgroup';
+import { InputTextModule } from 'primeng/inputtext';
+import { PanelModule } from 'primeng/panel';
 
 @Component({
     selector: 'app-tracking',
@@ -18,10 +19,10 @@ import { InputGroupModule } from 'primeng/inputgroup';
 })
 export class Tracking {
     private readonly trackingService = inject(TrackingService);
+    private readonly messageService = inject(MessageService);
 
     trackingCode = '';
     isLoading = false;
-    errorMessage = '';
     trackingData$!: Observable<{ state: State; events: Event[] }>;
 
     onSubmit(): void {
@@ -35,7 +36,7 @@ export class Tracking {
 
         this.trackingData$.subscribe({
             error: () => {
-                this.errorMessage = 'Failed to fetch tracking data. Please try again later.';
+                this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to fetch tracking data. Please try again later.' });
                 this.isLoading = false;
             },
             complete: () => {
