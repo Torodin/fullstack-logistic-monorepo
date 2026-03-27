@@ -1,6 +1,7 @@
 import { Route } from '@angular/router';
 import { Tracking } from '../tracking/tracking';
 import { Login } from '../auth/login/login';
+import { Register } from '../auth/register/register';
 import { ShipmentList } from '../shipments/shipment-list/shipment-list';
 import { ShipmentDetails } from '../shipments/shipment-details/shipment-details';
 import { roleGuard } from '../auth/guards/role.guard';
@@ -10,6 +11,14 @@ export const appRoutes: Route[] = [
     {
         path: 'login',
         component: Login,
+    },
+    {
+        path: 'users/register',
+        component: Register,
+        canActivate: [roleGuard],
+        data: {
+            roles: [Role.SUPERVISOR],
+        },
     },
     {
         path: 'shipments',

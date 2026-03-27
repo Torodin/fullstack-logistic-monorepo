@@ -1,5 +1,5 @@
 <section class="shipment-details-container">
-  <div class="shipment-details-header">
+  <div class="shipment-details-header flex items-center justify-between gap-2 flex-wrap">
     <button
       pButton
       type="button"
@@ -8,6 +8,14 @@
       icon="pi pi-arrow-left"
       (click)="goBack()"
     >Back to shipments</button>
+
+    <button
+      pButton
+      type="button"
+      icon="pi pi-sync"
+      [disabled]="!canChangeState()"
+      (click)="openStateModal()"
+    >Change state</button>
   </div>
 
   @if (isLoading()) {
@@ -51,7 +59,7 @@
           <div class="events-list">
             @for (event of currentShipment.events; track event.id) {
               <div class="event-card">
-                <p-fieldset header="{{ event.date | date:'short' }} - {{ event.location }}">
+                <p-fieldset legend="{{ event.date | date:'short' }} - {{ event.location }}">
                   @if (event.notes) {
                     <p class="m-0">{{ event.notes }}</p>
                   } @else {
@@ -67,4 +75,83 @@
       </p-card>
     </p-card>
   }
+
+  <p-dialog
+    header="Change shipment state"
+    [visible]="showStateModal()"
+    [modal]="true"
+    [closable]="!isUpdatingState()"
+    [dismissableMask]="!isUpdatingState()"
+    [style]="{ width: '32rem' }"
+    (visibleChange)="showStateModal.set($event)"
+    (onHide)="closeStateModal()"
+  >
+    <div class="flex flex-col gap-4">
+      @if (shipment(); as currentShipment) {
+        <p>
+          Update <strong>{{ currentShipment.id }}</strong> from
+          <strong>{{ formatState(currentShipment.state) }}</strong>.
+        </p>
+      }
+
+      <div class="flex flex-col gap-2">
+        <span>New state</span>
+        <p-select
+          [options]="availableStateOptions()"
+          optionLabel="label"
+          optionValue="value"
+          [ngModel]="stateForm().state"
+          [disabled]="isUpdatingState()"
+          (ngModelChange)="updateState($event)"
+        />
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <span>Location</span>
+        <input
+          pInputText
+          type="text"
+          [ngModel]="stateForm().location"
+          [disabled]="isUpdatingState()"
+          (ngModelChange)="updateLocation($event)"
+        />
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <span>Notes</span>
+        <textarea
+          class="p-inputtext p-component min-h-28 w-full"
+          rows="4"
+          [value]="stateForm().notes"
+          [disabled]="isUpdatingState()"
+          (input)="updateNotes($any($event.target).value)"
+        ></textarea>
+      </div>
+
+      @if (updateErrorMessage()) {
+        <p class="error-message">{{ updateErrorMessage() }}</p>
+      }
+    </div>
+
+    <ng-template #footer>
+      <div class="flex justify-end gap-2">
+        <button
+          pButton
+          type="button"
+          severity="secondary"
+          [outlined]="true"
+          [disabled]="isUpdatingState()"
+          (click)="closeStateModal()"
+        >Cancel</button>
+        <button
+          pButton
+          type="button"
+          icon="pi pi-check"
+          [loading]="isUpdatingState()"
+          [disabled]="!canSubmitStateChange()"
+          (click)="submitStateChange()"
+        >Save</button>
+      </div>
+    </ng-template>
+  </p-dialog>
 </section>

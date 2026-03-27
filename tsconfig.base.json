@@ -15,6 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@fullstack-logistic-wrk/domain-constants": ["packages/domain-constants/src/index.ts"],
       "@fullstack-logistic-wrk/prisma": ["packages/prisma/src/index.ts"],
       "@fullstack-logistic-wrk/prisma/generated": ["packages/prisma/src/generated.ts"]
     }

@@ -32,6 +32,12 @@ export interface CreateShipmentPayload {
   weight: number;
 }
 
+export interface UpdateShipmentPayload {
+  state: State;
+  location: string;
+  notes?: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -54,6 +60,10 @@ export class ShipmentsService {
 
   create(payload: CreateShipmentPayload) {
     return this.http.post<Shipment>('api/shipments', payload);
+  }
+
+  update(id: string, payload: UpdateShipmentPayload) {
+    return this.http.patch<Shipment>(`api/shipments/${encodeURIComponent(id)}/status`, payload);
   }
 
   findOne(id: string) {

@@ -37,6 +37,14 @@ export class AppMenuBar {
                 });
             }
 
+            if (currentUser?.role === Role.SUPERVISOR) {
+                baseItems.push({
+                    label: 'Register User',
+                    icon: 'pi pi-user-plus',
+                    routerLink: '/users/register',
+                });
+            }
+
             baseItems.push({
                 label: currentUser?.email ?? 'Logout',
                 icon: 'pi pi-sign-out',

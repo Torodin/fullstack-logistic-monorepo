@@ -1,9 +1,9 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
+import { STATE_TRANSITIONS } from '@fullstack-logistic-wrk/domain-constants';
 import { CreateShipmentDto } from './dto/create-shipment.dto';
 import { UpdateShipmentDto } from './dto/update-shipment.dto';
 import { PrismaService } from '@fullstack-logistic-wrk/prisma';
 import { State } from '@fullstack-logistic-wrk/prisma/generated';
-import { STATE_TRANSITIONS } from './constants/state-transitions.const';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { SHIPMENT_UPDATED_EVENT, ShipmentUpdatedEventPayload } from './events/shipment-updated.event';
 import { SHIPMENT_DELIVERED_EVENT, ShipmentDeliveredEventPayload } from './events/shipment-delivered.event';

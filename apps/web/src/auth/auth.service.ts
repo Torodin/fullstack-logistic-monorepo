@@ -5,6 +5,7 @@ import { map, tap } from 'rxjs';
 import type { AuthenticatedUser } from './models/authenticated-user.model';
 import type { AuthResponse } from './models/auth-response.model';
 import type { LoginPayload } from './models/login-payload.model';
+import type { RegisterPayload } from './models/register-payload.model';
 
 interface JwtPayload {
   sub: number;
@@ -35,6 +36,10 @@ export class AuthService {
       tap(({ access_token }) => this.setToken(access_token)),
       map(() => this.currentUser())
     );
+  }
+
+  register(payload: RegisterPayload) {
+    return this.http.post('api/auth/register', payload);
   }
 
   logout(): void {

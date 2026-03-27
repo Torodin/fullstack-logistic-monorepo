@@ -1,0 +1,67 @@
+<div class="flex justify-content-center">
+  <p-card header="Register User" class="w-full">
+    <form class="flex flex-column gap-3" (ngSubmit)="onSubmit()" autocomplete="off">
+      <p-floatlabel variant="on">
+        <label for="email">Email</label>
+        <input
+          pInputText
+          id="email"
+          name="email"
+          type="email"
+          [(ngModel)]="email"
+          required
+        />
+      </p-floatlabel>
+
+      <p-floatlabel variant="on">
+        <label for="name">Full Name (optional)</label>
+        <input
+          pInputText
+          id="name"
+          name="name"
+          type="text"
+          [(ngModel)]="name"
+        />
+      </p-floatlabel>
+
+      <p-floatlabel variant="on">
+        <label for="password">Password</label>
+        <input
+          pInputText
+          id="password"
+          name="password"
+          type="password"
+          [(ngModel)]="password"
+          required
+        />
+      </p-floatlabel>
+
+      <p-floatlabel variant="on">
+        <label for="role">Role</label>
+        <p-select
+          id="role"
+          name="role"
+          [(ngModel)]="role"
+          [options]="roles"
+          optionLabel="label"
+          optionValue="value"
+        />
+      </p-floatlabel>
+
+      <button
+        pButton
+        type="submit"
+        [disabled]="isSubmitting"
+        [loading]="isSubmitting"
+      >Create User</button>
+
+      @if (errorMessage) {
+        <small class="text-red-500">{{ errorMessage }}</small>
+      }
+
+      @if (successMessage) {
+        <small class="text-green-500">{{ successMessage }}</small>
+      }
+    </form>
+  </p-card>
+</div>

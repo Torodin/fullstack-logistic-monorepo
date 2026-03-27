@@ -1,13 +1,15 @@
 import { convertToParamMap, ActivatedRoute, Router } from '@angular/router';
 import { TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { State } from '@fullstack-logistic-wrk/prisma/generated';
 import { ShipmentDetails } from './shipment-details';
 import { ShipmentsService } from '../shipments.service';
 
 describe('ShipmentDetails', () => {
   const findOneCalls: string[] = [];
+  const updateCalls: Array<{ id: string; payload: unknown }> = [];
   const navigateCalls: unknown[] = [];
+  let shouldFailUpdate = false;
 
   const defaultShipment = {
     id: 'SHP00001',
@@ -37,6 +39,15 @@ describe('ShipmentDetails', () => {
       findOneCalls.push(id);
       return of(defaultShipment);
     },
+    update: (id: string, payload: unknown) => {
+      updateCalls.push({ id, payload });
+
+      if (shouldFailUpdate) {
+        return throwError(() => new Error('Update failed'));
+      }
+
+      return of({ ...defaultShipment, state: (payload as { state: State }).state });
+    },
   };
 
   const routerMock = {
@@ -47,7 +58,9 @@ describe('ShipmentDetails', () => {
   };
 
   beforeEach(async () => {
+    shouldFailUpdate = false;
     findOneCalls.length = 0;
+    updateCalls.length = 0;
     navigateCalls.length = 0;
 
     await TestBed.configureTestingModule({
@@ -71,6 +84,22 @@ describe('ShipmentDetails', () => {
     }).compileComponents();
   });
 
+  beforeAll(() => {
+    Object.defineProperty(window, 'matchMedia', {
+      writable: true,
+      value: () => ({
+        matches: false,
+        media: '',
+        onchange: null,
+        addListener: () => undefined,
+        removeListener: () => undefined,
+        addEventListener: () => undefined,
+        removeEventListener: () => undefined,
+        dispatchEvent: () => false,
+      }),
+    });
+  });
+
   it('loads shipment details from route id', () => {
     const fixture = TestBed.createComponent(ShipmentDetails);
     fixture.detectChanges();
@@ -86,5 +115,62 @@ describe('ShipmentDetails', () => {
     component.goBack();
 
     expect(navigateCalls).toEqual([['/shipments']]);
+  });
+
+  it('derives valid next states from shared transitions', () => {
+    const fixture = TestBed.createComponent(ShipmentDetails);
+    const component = fixture.componentInstance;
+
+    fixture.detectChanges();
+
+    expect(component.availableNextStates()).toEqual([
+      State.IN_DELIVERY,
+      State.RETURNED,
+      State.CANCELED,
+    ]);
+  });
+
+  it('updates shipment state and reloads shipment details', () => {
+    const fixture = TestBed.createComponent(ShipmentDetails);
+    const component = fixture.componentInstance;
+
+    fixture.detectChanges();
+
+    component.openStateModal();
+    component.updateState(State.IN_DELIVERY);
+    component.updateLocation('Barcelona Distribution Center');
+    component.updateNotes('Out for local delivery');
+    component.submitStateChange();
+
+    expect(updateCalls).toEqual([
+      {
+        id: 'SHP00001',
+        payload: {
+          state: State.IN_DELIVERY,
+          location: 'Barcelona Distribution Center',
+          notes: 'Out for local delivery',
+        },
+      },
+    ]);
+    expect(findOneCalls).toEqual(['SHP00001', 'SHP00001']);
+    expect(component.showStateModal()).toBe(false);
+    expect(component.updateErrorMessage()).toBe('');
+  });
+
+  it('shows an error when state update fails', () => {
+    shouldFailUpdate = true;
+    const fixture = TestBed.createComponent(ShipmentDetails);
+    const component = fixture.componentInstance;
+
+    fixture.detectChanges();
+
+    component.openStateModal();
+    component.updateState(State.IN_DELIVERY);
+    component.updateLocation('Barcelona Distribution Center');
+    component.submitStateChange();
+
+    expect(updateCalls).toHaveLength(1);
+    expect(component.showStateModal()).toBe(true);
+    expect(component.updateErrorMessage()).toBe('Failed to update shipment state. Please try again.');
   });
 });
