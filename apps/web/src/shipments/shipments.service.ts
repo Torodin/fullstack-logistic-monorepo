@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Shipment, State } from '@fullstack-logistic-wrk/prisma/generated';
+import { Event, Shipment, State } from '@fullstack-logistic-wrk/prisma/generated';
 
 export interface ShipmentPagination {
   page: number;
@@ -13,6 +13,10 @@ export interface ShipmentListResponse {
   data: Shipment[];
   pagination: ShipmentPagination;
 }
+
+export type ShipmentDetailsResponse = Shipment & {
+  events: Event[];
+};
 
 export interface FindShipmentsParams {
   page: number;
@@ -50,5 +54,9 @@ export class ShipmentsService {
 
   create(payload: CreateShipmentPayload) {
     return this.http.post<Shipment>('api/shipments', payload);
+  }
+
+  findOne(id: string) {
+    return this.http.get<ShipmentDetailsResponse>(`api/shipments/${encodeURIComponent(id)}`);
   }
 }

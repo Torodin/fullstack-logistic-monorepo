@@ -1,0 +1,70 @@
+<section class="shipment-details-container">
+  <div class="shipment-details-header">
+    <button
+      pButton
+      type="button"
+      severity="secondary"
+      [outlined]="true"
+      icon="pi pi-arrow-left"
+      (click)="goBack()"
+    >Back to shipments</button>
+  </div>
+
+  @if (isLoading()) {
+    <p>Loading shipment details...</p>
+  } @else if (errorMessage()) {
+    <p class="error-message">{{ errorMessage() }}</p>
+  } @else if (shipment(); as currentShipment) {
+    <p-card class="mt-5 p-5">
+      <ng-template #title>
+        <h2>Shipment {{ currentShipment.id }}</h2>
+      </ng-template>
+
+      <ng-template #subtitle>
+        <p-tag
+            [severity]="stateSeverity(currentShipment.state)"
+            [value]="formatState(currentShipment.state)"
+          /></ng-template>
+
+      <div class="details-list">
+        <p><strong>Origin:</strong> {{ currentShipment.origin }}</p>
+        <p><strong>Destination:</strong> {{ currentShipment.destination }}</p>
+        <p><strong>Addressee:</strong> {{ currentShipment.addressee }}</p>
+        <p><strong>Phone:</strong> {{ currentShipment.phone || '-' }}</p>
+        <p><strong>Weight:</strong> {{ currentShipment.weight }} kg</p>
+        <p>
+          <strong>Delivered date:</strong>
+          @if (currentShipment.delivered_at) {
+            {{ currentShipment.delivered_at | date: 'short' }}
+          } @else {
+            -
+          }
+        </p>
+      </div>
+
+      <p-card>
+        <ng-template #title>
+          <h3 class="events-title">Shipment events</h3>
+        </ng-template>
+
+        @if (currentShipment.events.length) {
+          <div class="events-list">
+            @for (event of currentShipment.events; track event.id) {
+              <div class="event-card">
+                <p-fieldset header="{{ event.date | date:'short' }} - {{ event.location }}">
+                  @if (event.notes) {
+                    <p class="m-0">{{ event.notes }}</p>
+                  } @else {
+                    <p class="m-0">No notes provided.</p>
+                  }
+                </p-fieldset>
+              </div>
+            }
+          </div>
+        } @else {
+          <p>No events registered for this shipment yet.</p>
+        }
+      </p-card>
+    </p-card>
+  }
+</section>

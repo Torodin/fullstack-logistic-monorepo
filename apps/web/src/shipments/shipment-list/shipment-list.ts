@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { State } from '@fullstack-logistic-wrk/prisma/generated';
 import { ButtonModule } from 'primeng/button';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
@@ -29,6 +30,7 @@ import { CreateShipmentModal } from '../create-shipment-modal/create-shipment-mo
 })
 export class ShipmentList {
   private readonly shipmentsService = inject(ShipmentsService);
+  private readonly router = inject(Router);
 
   shipmentsList$!: Observable<ShipmentListResponse>;
   totalRecords = signal(0);
@@ -77,6 +79,10 @@ export class ShipmentList {
   onShipmentCreated(): void {
     this.page.set(1);
     this.loadShipments();
+  }
+
+  onViewDetails(id: string): void {
+    this.router.navigate(['/shipments', id]);
   }
 
   formatState(state: State): string {

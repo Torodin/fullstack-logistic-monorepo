@@ -40,6 +40,7 @@
           <th>Destination</th>
           <th>State</th>
           <th>Delivered Date</th>
+          <th>Actions</th>
         </tr>
       </ng-template>
 
@@ -61,12 +62,22 @@
               -
             }
           </td>
+          <td>
+            <button
+              pButton
+              type="button"
+              size="small"
+              label="View details"
+              icon="pi pi-eye"
+              (click)="onViewDetails(shipment.id)"
+            ></button>
+          </td>
         </tr>
       </ng-template>
 
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="5">No shipments found for the selected filters.</td>
+          <td colspan="6">No shipments found for the selected filters.</td>
         </tr>
       </ng-template>
     </p-table>
