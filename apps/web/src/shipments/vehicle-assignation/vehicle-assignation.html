@@ -1,0 +1,169 @@
+<section class="p-4 max-w-6xl mx-auto">
+  <header class="mb-6">
+    <h2 class="text-2xl font-semibold">Vehicle Assignation</h2>
+    <p class="text-gray-500 mt-1">
+      Select IN‑WAREHOUSE shipments and set vehicle capacity to compute optimal load assignments.
+    </p>
+  </header>
+
+  <!-- Config row -->
+  <div class="flex items-end gap-4 mb-4 flex-wrap">
+    <div class="flex flex-col gap-1">
+      <label class="text-sm font-medium" for="vehicleCapacity">Vehicle capacity (kg)</label>
+      <p-inputnumber
+        inputId="vehicleCapacity"
+        [ngModel]="vehicleCapacity()"
+        (ngModelChange)="onCapacityChange($event)"
+        [min]="1"
+        [useGrouping]="false"
+        [maxFractionDigits]="2"
+        placeholder="e.g. 1000"
+      />
+    </div>
+    <button
+      pButton
+      icon="pi pi-check"
+      [loading]="isAssigning()"
+      [disabled]="!canAssign()"
+      (click)="onAssign()"
+    >Assign vehicles</button>
+  </div>
+
+  <!-- Shipments selection table -->
+  <p-table
+    [value]="shipments()"
+    [loading]="isLoadingShipments()"
+    [selection]="selectedShipments()"
+    (selectionChange)="onSelectionChange($event)"
+    selectionMode="multiple"
+    dataKey="id"
+    [rowHover]="true"
+  >
+    <ng-template pTemplate="caption">
+      <div class="flex items-center justify-between">
+        <span class="font-semibold">Shipments in warehouse</span>
+        <span class="text-sm text-gray-500">{{ selectedShipments().length }} selected</span>
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 3rem"><p-tableHeaderCheckbox /></th>
+        <th>Shipment ID</th>
+        <th>Destination</th>
+        <th>Addressee</th>
+        <th>Weight (kg)</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-shipment>
+      <tr [pSelectableRow]="shipment">
+        <td><p-tableCheckbox [value]="shipment" /></td>
+        <td>{{ shipment.id }}</td>
+        <td>{{ shipment.destination }}</td>
+        <td>{{ shipment.addressee }}</td>
+        <td>{{ shipment.weight }}</td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="5" class="text-center py-4 text-gray-500">
+          No shipments in warehouse available for assignment.
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <!-- Assignation results -->
+  @if (result(); as assignation) {
+    <div class="mt-8">
+      <!-- Summary bar -->
+      <div
+        class="flex items-center gap-8 mb-6 p-4 rounded-lg border border-green-300 flex-wrap"
+      >
+        <div class="text-center">
+          <p class="text-3xl font-bold">{{ assignation.totalVechiclesUsed }}</p>
+          <p class="text-sm text-gray-500">Vehicles used</p>
+        </div>
+        <div class="w-px h-10 bg-gray-300 hidden sm:block"></div>
+        <div class="text-center">
+          <p class="text-3xl font-bold">{{ assignation.totalWeight }} kg</p>
+          <p class="text-sm text-gray-500">Total weight</p>
+        </div>
+        <div class="w-px h-10 bg-gray-300 hidden sm:block"></div>
+        <div class="text-center">
+          <p class="text-3xl font-bold">{{ vehicleCapacity() }} kg</p>
+          <p class="text-sm text-gray-500">Capacity per vehicle</p>
+        </div>
+        <div class="w-px h-10 bg-gray-300 hidden sm:block"></div>
+        <div class="text-center">
+          <p class="text-3xl font-bold">{{ selectedShipments().length }}</p>
+          <p class="text-sm text-gray-500">Shipments assigned</p>
+        </div>
+      </div>
+
+      <!-- Vehicle cards grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        @for (vehicle of assignation.vehicles; track vehicle.vehicleNumber) {
+          <p-card>
+            <ng-template #title>
+              <div class="flex items-center gap-2">
+                <i class="pi pi-car"></i>
+                <span>Vehicle {{ vehicle.vehicleNumber }}</span>
+              </div>
+            </ng-template>
+
+            <!-- Load progress bar -->
+            <div class="mb-4">
+                <div class="flex justify-between text-sm mb-1">
+                    <span class="font-medium text-gray-500">Load</span>
+                    <span class="text-gray-500">{{ getLoadPercent(vehicle) }}%</span>
+                </div>
+                <p-progressbar [value]="getLoadPercent(vehicle)" [color]="getLoadBarColor(vehicle)">
+                    <ng-template #content let-value>
+                        <span>{{ value }}/100 kg</span>
+                    </ng-template>
+                </p-progressbar>
+                <div class="flex justify-between text-xs text-gray-500 mt-1">
+                    <span
+                    [ngClass]="{
+                        'text-emerald-600': getLoadPercent(vehicle) < 70,
+                        'text-amber-500': getLoadPercent(vehicle) >= 70 && getLoadPercent(vehicle) < 90,
+                        'text-red-500': getLoadPercent(vehicle) >= 90,
+                    }"
+                    >
+                    @if (getLoadPercent(vehicle) < 70) {
+                        Low load
+                    } @else if (getLoadPercent(vehicle) < 90) {
+                        Moderate load
+                    } @else {
+                        High load
+                    }
+                    </span>
+                    <span>{{ vehicle.remainingCapacity }} kg remaining</span>
+                </div>
+            </div>
+
+            <!-- Assigned shipments list -->
+            <div>
+              <p class="text-sm font-medium text-gray-400 mb-2">
+                Shipments ({{ vehicle.shipments.length }})
+              </p>
+              <div class="flex flex-col gap-1">
+                @for (shipment of vehicle.shipments; track shipment.id) {
+                  <div
+                    class="flex justify-between items-center py-1.5 px-2 rounded text-sm border border-gray-500"
+                  >
+                    <span class="font-mono text-x">{{ shipment.id }}</span>
+                    <span class=" text-xs">{{ shipment.weight }} kg</span>
+                  </div>
+                }
+              </div>
+            </div>
+          </p-card>
+        }
+      </div>
+    </div>
+  }
+</section>

@@ -39,6 +39,11 @@ export class AppMenuBar {
 
             if (currentUser?.role === Role.SUPERVISOR) {
                 baseItems.push({
+                    label: 'Vehicle Assignation',
+                    icon: 'pi pi-car',
+                    routerLink: '/shipments/assign-vehicles',
+                });
+                baseItems.push({
                     label: 'Register User',
                     icon: 'pi pi-user-plus',
                     routerLink: '/users/register',

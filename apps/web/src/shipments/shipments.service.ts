@@ -38,6 +38,29 @@ export interface UpdateShipmentPayload {
   notes?: string;
 }
 
+export interface AssignVehiclesPayload {
+  shipmentIds: string[];
+  vehicleCapacity: number;
+}
+
+export interface VehicleShipmentItem {
+  id: string;
+  weight: number;
+}
+
+export interface VehicleAssignment {
+  vehicleNumber: number;
+  shipments: VehicleShipmentItem[];
+  totalWeight: number;
+  remainingCapacity: number;
+}
+
+export interface VehicleAssignationResponse {
+  vehicles: VehicleAssignment[];
+  totalVechiclesUsed: number;
+  totalWeight: number;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -68,5 +91,9 @@ export class ShipmentsService {
 
   findOne(id: string) {
     return this.http.get<ShipmentDetailsResponse>(`api/shipments/${encodeURIComponent(id)}`);
+  }
+
+  assignVehicles(payload: AssignVehiclesPayload) {
+    return this.http.post<VehicleAssignationResponse>('api/shipments/assign-vehicles', payload);
   }
 }
