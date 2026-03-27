@@ -28,3 +28,20 @@
 - Uso Prisma por familiaridad y por su gran experiencia de desarrollo junto a PostgreSQL.
 - Implemeta un RBAC por simplicidad, ya que el control de acceso necesario es muy basico
 - Implemeto una maquina de estados para envios. Flexibilidad y mantenibilidad con el flujo definido en una constante.
+
+## Variables de entorno
+
+Este proyecto usa tres archivos de entorno para desarrollo local.
+
+1. En la raiz del repositorio como global.
+2. En `apps/api/.env` para la api.
+3. En `packages/prisma/.env` para la base de datos.
+
+Valores que debes cambiar antes de ejecutar en local:
+
+- `JWT_SECRET`
+- `SUPERVISOR_PASSWORD`
+- `POSTGRES_USER`
+- `POSTGRES_PASSWORD`
+- `POSTGRES_DB`
+- `DATABASE_URL`
