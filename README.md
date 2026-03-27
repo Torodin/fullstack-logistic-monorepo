@@ -1,25 +1,26 @@
 # FullstackLogisticWrk
 
 ## Objetivos
+
 - [ ] API Rest con NestJS y PostgreSQL
-    - [x] Autenticación por roles con JWT
-    - [x] Gestión de envíos
-    - [x] Tracking publico de envíos
-    - [x] Asignación de carga
-    - [ ] Swagger*
+  - [x] Autenticación por roles con JWT
+  - [x] Gestión de envíos
+  - [x] Tracking publico de envíos
+  - [x] Asignación de carga
+  - [ ] Swagger\*
 - [ ] Front angular
-    - [ ] Login
-    - [ ] Registro
-    - [ ] Envíos
-        - [ ] Exportar a csv*
-    - [ ] Detalle envío
-    - [ ] Tracking publico
-    - [ ] Asignación de vehículos*
-    - [ ] Dashboard supervisor*
-- [ ] Docker compose*
-    - [x] Dev
-    - [ ] Prod
-- [ ] GitHub actions (lint y test)*
+  - [x] Login
+  - [x] Registro
+  - [x] Envíos
+    - [ ] Exportar a csv\*
+  - [x] Detalle envío
+  - [x] Tracking publico
+  - [ ] Asignación de vehículos\*
+  - [ ] Dashboard supervisor\*
+- [ ] Docker compose\*
+  - [x] Dev
+  - [ ] Prod
+- [ ] GitHub actions (lint y test)\*
 
 ## Decisiones
 
